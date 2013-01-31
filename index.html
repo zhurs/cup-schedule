@@ -11,13 +11,23 @@
 <script>
 function calc_rounds(players_num) {
     var N = players_num % 2 ? players_num + 1 : players_num;
+    var K = N / 2;
+
+    var players = [];
+    for(var i = 0; i < N; i++) players[i] = i;
+
     var game_rounds = [];
-    for(var r = 0; r < N-1; r++) {
+    for(var r=0; r < N-1; r++) {  
         var game_round = {'num': r+1, 'games': []};
-        for(var i = 0; i < N/2; i++) {
-            var player1 = i >= r ? i - r : N - r + i;
-            var player2 = N - i - r - 1;
-            game_round.games.push({'player1': player1+1, 'player2': player2+1});
+        if (r>0) {
+            var t = players[1];
+            for(var i = 1; i < N; i++) {
+                players[i] = players[i+1];
+            }
+            players[N-1] = t;
+        }
+        for(var i = 0; i < K; i++) {
+            game_round.games.push({player1: players[i]+1, player2: players[N-i-1]+1});
         }
         game_rounds.push(game_round);
     }

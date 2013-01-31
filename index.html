@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Круговой турнир</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="http://yandex.st/bootstrap/2.2.2/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="http://yandex.st/jquery/1.9.0/jquery.min.js"></script>
+    <script src="http://yandex.st/bootstrap/2.2.2/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.rc.2/handlebars.min.js"></script>
+
+<script>
+function calc_rounds(players_num) {
+    var N = players_num % 2 ? players_num + 1 : players_num;
+    var game_rounds = [];
+    for(var r = 0; r < N-1; r++) {
+        var game_round = {'num': r+1, 'games': []};
+        for(var i = 0; i < N/2; i++) {
+            var player1 = i >= r ? i - r : N - r + i;
+            var player2 = N - i - r - 1;
+            game_round.games.push({'player1': player1+1, 'player2': player2+1});
+        }
+        game_rounds.push(game_round);
+    }
+    return game_rounds;
+}
+
+function build_table() {
+    var players_num = parseInt($('#players_num').val());
+    if (players_num < 2) {
+        alert('неверное количество участников');
+        return;
+    }
+    var rounds = calc_rounds(players_num);
+    console.log(1);
+    var template = Handlebars.compile($("#hb-rounds").html());
+    console.log(2);
+    var html = template({'rounds': rounds});
+    console.log(html);
+    $('#r-table').html(html);
+    console.log(rounds);
+}
+
+
+</script>
+<script id="hb-rounds" type="text/x-handlebars-template">
+  {{#each rounds}}
+    <h3>Тур №{{num}}</h3>
+    <ul>
+    {{#each games}}
+      <li>{{player1}} - {{player2}}</li>
+    {{/each}}
+    </ul>
+  {{/each}}
+</script>
+
+  </head>
+  <body>
+    <div class="container">
+    <h1>Круговой турнир</h1>
+    <form class="form-inline">
+      Количество участников: 
+      <input type="text" class="input-small" id="players_num" value="8">
+      <button type="submit" class="btn btn-primary"  onclick="try {build_table();} catch (e) {};return false;">Построить таблицу</button>
+    </form>
+    <div id="r-table"></div>
+    </div>
+  </body>
+</html>
+
+

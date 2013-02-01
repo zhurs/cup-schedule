@@ -25,11 +25,12 @@ function calc_rounds(players_num) {
     for(var r=0; r < N-1; r++) {  
         var game_round = {'num': r+1, 'games': []};
         if (r>0) {
-            var t = players[1];
-            for(var i = 1; i < N; i++) {
-                players[i] = players[i+1];
+            // вращаем все элементы кроме первого
+            var t = players[N-1];
+            for(var i = N-1; i >= 2; i--) {
+                players[i] = players[i-1];
             }
-            players[N-1] = t;
+            players[1] = t;
         }
         for(var i = 0; i < K; i++) {
             game_round.games.push({player1: players[i]+1, player2: players[N-i-1]+1});
